@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="code" name="Code Generator" schema="schema/pt.iscte.pidesco.code.exsd"/>
+   <extension
+         id="PidescoView"
+         name="Code Generator"
+         point="pt.iscte.pidesco.view">
+      <view
+            class="pt.iscte.pidesco.codegenerator.internal.CodeGeneratorView">
+      </view>
+   </extension>
+
+</plugin>
