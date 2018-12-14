@@ -31,4 +31,5 @@ public class CGMethod {
 	public int getNumberOfParameters() {
 		return methodDeclaration.parameters().size();
 	}
+
 }

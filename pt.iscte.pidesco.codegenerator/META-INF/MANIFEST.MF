@@ -23,6 +23,6 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.jdt.internal.compiler.batch,
  org.eclipse.jdt.internal.core.jdom
 Export-Package: pt.iscte.pidesco.codegenerator.AST_Processing,
+ pt.iscte.pidesco.codegenerator.codes,
  pt.iscte.pidesco.codegenerator.extensibility,
- pt.iscte.pidesco.codegenerator.internal,
  pt.iscte.pidesco.codegenerator.service

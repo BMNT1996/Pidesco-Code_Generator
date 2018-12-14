@@ -33,6 +33,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.eclipse.core.runtime.Platform;
 
+import pt.iscte.pidesco.codegenerator.codes.SimpleCode;
 import pt.iscte.pidesco.codegenerator.extensibility.CGCode;
 import pt.iscte.pidesco.codegenerator.extensibility.CGCode.CodeType;
 import pt.iscte.pidesco.codegenerator.features.GettersAndSetters;
@@ -40,65 +41,50 @@ import pt.iscte.pidesco.codegenerator.features.ToString;
 import pt.iscte.pidesco.extensibility.PidescoView;
 import pt.iscte.pidesco.javaeditor.service.JavaEditorServices;
 
-public class CodeGeneratorView implements PidescoView{
+public class CodeGeneratorView implements PidescoView {
 	private Composite ListArea;
 	private ListViewer list;
 	private boolean isOnSimplesCodeList;
 	private Map<String, SimpleCode> SimpleCodeMap;
 	private Map<String, CGCode> ComplexAndPluginCodeMap;
-	
+
 	static CodeGeneratorView instance;
-	
+
 	@Override
 	public void createContents(Composite viewArea, Map<String, Image> imageMap) {
-		instance=this;
+		instance = this;
 		SimpleCodeMap = new HashMap<String, SimpleCode>();
 		ComplexAndPluginCodeMap = new HashMap<String, CGCode>();
-		isOnSimplesCodeList=true;
-		
-		viewArea.setLayout(new GridLayout(1,false));
+		isOnSimplesCodeList = true;
+
+		viewArea.setLayout(new GridLayout(1, false));
 		setViewButtons(viewArea);
 		setViewList(viewArea);
 		addDoubleClickListener();
-		
-		loadSimpleCodesFromFile();
-		
-		loadInternalCodes();
-		
-		loadPlugins();
-	}
 
-	private void loadPlugins() {
-		IExtensionRegistry reg = Platform.getExtensionRegistry();
-		IConfigurationElement[] codes = reg.getConfigurationElementsFor("pt.iscte.pidesco.codegenerator.code");
-		for(IConfigurationElement ext : codes) {
-			try {
-				CGCode code = (CGCode) ext.createExecutableExtension("class");
-				ComplexAndPluginCodeMap.put(code.getCodeName(), code);
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+		loadSimpleCodesFromFile();
+
+		loadInternalCodes();
+
+		loadPlugins();
 	}
 
 	static CodeGeneratorView getInstance() {
 		return instance;
 	}
-	
+
 	private void setViewButtons(Composite viewArea) {
-		Composite ButtonArea=new Composite(viewArea, SWT.FILL);
-		ButtonArea.setLayout(new GridLayout(3,false));
+		Composite ButtonArea = new Composite(viewArea, SWT.FILL);
+		ButtonArea.setLayout(new GridLayout(3, false));
 		GridData GridDataForButtonArea = new GridData();
 		GridDataForButtonArea.horizontalAlignment = GridData.FILL;
-		GridDataForButtonArea.grabExcessHorizontalSpace=true;
+		GridDataForButtonArea.grabExcessHorizontalSpace = true;
 		ButtonArea.setLayoutData(GridDataForButtonArea);
-		
+
 		GridData GridDataForButtons = new GridData();
 		GridDataForButtons.horizontalAlignment = GridData.FILL;
-		GridDataForButtons.grabExcessHorizontalSpace=true;
-		
+		GridDataForButtons.grabExcessHorizontalSpace = true;
+
 		Button SimpleCodeButton = new Button(ButtonArea, SWT.PUSH);
 		SimpleCodeButton.setText("Simple Code");
 		SimpleCodeButton.setLayoutData(GridDataForButtons);
@@ -106,21 +92,22 @@ public class CodeGeneratorView implements PidescoView{
 			@Override
 			public void handleEvent(Event event) {
 				switch (event.type) {
-		        	case SWT.Selection:
-		        		if(!isOnSimplesCodeList) {
-		        			isOnSimplesCodeList=true;
-		        			for(String key : ComplexAndPluginCodeMap.keySet())
-		        				list.remove(key);
-		        			TreeSet<String> keys = new TreeSet<String>(SimpleCodeMap.keySet());		
-		        			for(String key : keys)
-		        				list.add(key);;
-		        			break;
-		        		}
-		        }
+				case SWT.Selection:
+					if (!isOnSimplesCodeList) {
+						isOnSimplesCodeList = true;
+						for (String key : ComplexAndPluginCodeMap.keySet())
+							list.remove(key);
+						TreeSet<String> keys = new TreeSet<String>(SimpleCodeMap.keySet());
+						for (String key : keys)
+							list.add(key);
+						;
+						break;
+					}
+				}
 				ListArea.layout();
 			}
 		});
-		
+
 		Button ComplexCodeAndPlugInsButton = new Button(ButtonArea, SWT.PUSH);
 		ComplexCodeAndPlugInsButton.setText("Complex Code and Plug-ins");
 		ComplexCodeAndPlugInsButton.setLayoutData(GridDataForButtons);
@@ -128,71 +115,75 @@ public class CodeGeneratorView implements PidescoView{
 			@Override
 			public void handleEvent(Event event) {
 				switch (event.type) {
-		        	case SWT.Selection:
-		        		if(isOnSimplesCodeList) {
-		        			isOnSimplesCodeList=false;
-		        			for(String key : SimpleCodeMap.keySet())
-		        				list.remove(key);
-		        			TreeSet<String> keys = new TreeSet<String>(ComplexAndPluginCodeMap.keySet());		
-		        			for(String key : keys)
-		        				list.add(key);;
-		        			break;
-		        		}
-		        }
+				case SWT.Selection:
+					if (isOnSimplesCodeList) {
+						isOnSimplesCodeList = false;
+						for (String key : SimpleCodeMap.keySet())
+							list.remove(key);
+						TreeSet<String> keys = new TreeSet<String>(ComplexAndPluginCodeMap.keySet());
+						for (String key : keys)
+							list.add(key);
+						;
+						break;
+					}
+				}
 				ListArea.layout();
 			}
 		});
-		
+
 		Button AddSimpleCodeButton = new Button(ButtonArea, SWT.PUSH);
-		AddSimpleCodeButton.setText("Add Simple Code");
+		AddSimpleCodeButton.setText("Add and Remove Simple Code");
 		AddSimpleCodeButton.setLayoutData(GridDataForButtons);
 		AddSimpleCodeButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				switch (event.type) {
-		        	case SWT.Selection:
-		        		WindowGenerator.getInstance().generateSimpleCodeAdderWindow();
-		        }
+				case SWT.Selection:
+					WindowGenerator.getInstance().generateSimpleCodeAdderWindow();
+				}
 				ListArea.layout();
 			}
 		});
 	}
-	
+
 	private void setViewList(Composite viewArea) {
-		ListArea=new Composite(viewArea, SWT.BORDER);
+		ListArea = new Composite(viewArea, SWT.BORDER);
 		ListArea.setLayout(new FillLayout());
 		GridData GridDataForListArea = new GridData();
 		GridDataForListArea.horizontalAlignment = GridData.FILL;
-		GridDataForListArea.grabExcessHorizontalSpace=true;
+		GridDataForListArea.grabExcessHorizontalSpace = true;
 		GridDataForListArea.verticalAlignment = GridData.FILL;
-		GridDataForListArea.grabExcessVerticalSpace=true;
+		GridDataForListArea.grabExcessVerticalSpace = true;
 		ListArea.setLayoutData(GridDataForListArea);
-		list = new ListViewer(ListArea, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);		
-		TreeSet<String> keys = new TreeSet<String>(SimpleCodeMap.keySet());		
-		for(String key : keys)
+		list = new ListViewer(ListArea, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		TreeSet<String> keys = new TreeSet<String>(SimpleCodeMap.keySet());
+		for (String key : keys)
 			list.add(key);
 	}
-	
+
 	private void addDoubleClickListener() {
 		list.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection s = (IStructuredSelection) list.getSelection();
-				
+
 				BundleContext context = CodeGeneratorActivator.getContext();
-				ServiceReference<JavaEditorServices> serviceReference = context.getServiceReference(JavaEditorServices.class);
+				ServiceReference<JavaEditorServices> serviceReference = context
+						.getServiceReference(JavaEditorServices.class);
 				JavaEditorServices javaEditorServ = context.getService(serviceReference);
-				
-				if(SimpleCodeMap.containsKey(s.getFirstElement())) 
+
+				if (SimpleCodeMap.containsKey(s.getFirstElement()))
 					javaEditorServ.insertTextAtCursor(SimpleCodeMap.get(s.getFirstElement()).resultCodeToWrite());
-				else if(ComplexAndPluginCodeMap.containsKey(s.getFirstElement()))
-					javaEditorServ.insertTextAtCursor(ComplexAndPluginCodeMap.get(s.getFirstElement()).resultCodeToWrite());
+				else if (ComplexAndPluginCodeMap.containsKey(s.getFirstElement()))
+					javaEditorServ
+							.insertTextAtCursor(ComplexAndPluginCodeMap.get(s.getFirstElement()).resultCodeToWrite());
 				else {
-					MessageDialog.openError(ListArea.getShell(), "Error", "This code is not avaiable, could it be removed");
+					MessageDialog.openError(ListArea.getShell(), "Error",
+							"This code is not avaiable, could it be removed");
 				}
 			}
 		});
 	}
-	
+
 	private void loadInternalCodes() {
 		GettersAndSetters gas = new GettersAndSetters();
 		ComplexAndPluginCodeMap.put(gas.getCodeName(), gas);
@@ -200,50 +191,61 @@ public class CodeGeneratorView implements PidescoView{
 		ComplexAndPluginCodeMap.put(ts.getCodeName(), ts);
 	}
 	
+	
+	private void loadPlugins() {
+		IExtensionRegistry reg = Platform.getExtensionRegistry();
+		IConfigurationElement[] codes = reg.getConfigurationElementsFor("pt.iscte.pidesco.codegenerator.code");
+		for (IConfigurationElement ext : codes) {
+			try {
+				CGCode code = (CGCode) ext.createExecutableExtension("class");
+				ComplexAndPluginCodeMap.put(code.getCodeName(), code);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	boolean isCreated() {
 		return list != null;
 	}
-	
+
 	void addCode(CGCode code) {
-		if(code.getCodeType().equals(CodeType.SIMPLE))
-			if(!SimpleCodeMap.containsKey(code.getCodeName()))
+		if (code.getCodeType().equals(CodeType.SIMPLE))
+			if (!SimpleCodeMap.containsKey(code.getCodeName()))
 				SimpleCodeMap.put(code.getCodeName(), (SimpleCode) code);
 			else
 				MessageDialog.openError(ListArea.getShell(), "Error", "There are another code with the same name");
+		else if (!ComplexAndPluginCodeMap.containsKey(code.getCodeName()))
+			ComplexAndPluginCodeMap.put(code.getCodeName(), (SimpleCode) code);
 		else
-			if(!ComplexAndPluginCodeMap.containsKey(code.getCodeName()))
-				ComplexAndPluginCodeMap.put(code.getCodeName(), (SimpleCode) code);
-			else
-				MessageDialog.openError(ListArea.getShell(), "Error", "There are another code with the same name");
-		
+			MessageDialog.openError(ListArea.getShell(), "Error", "There are another code with the same name");
+
 		refreshList();
 	}
-	
-	void RemoveSimpleCode(String name) {
+
+	void RemoveSimpleCodeWithName(String name) {
 		SimpleCodeMap.remove(name);
 		list.remove(name);
 		refreshList();
 		saveSimpleCodesToFile();
 	}
 
-	
 	private void refreshList() {
-		if(!isOnSimplesCodeList) {
-			isOnSimplesCodeList=true;
-			for(String key : ComplexAndPluginCodeMap.keySet())
+		if (!isOnSimplesCodeList) {
+			isOnSimplesCodeList = true;
+			for (String key : ComplexAndPluginCodeMap.keySet())
+				list.remove(key);
+		} else {
+			isOnSimplesCodeList = true;
+			for (String key : SimpleCodeMap.keySet())
 				list.remove(key);
 		}
-		else {
-			isOnSimplesCodeList=true;
-			for(String key : SimpleCodeMap.keySet())
-				list.remove(key);
-		}
-		TreeSet<String> keys = new TreeSet<String>(SimpleCodeMap.keySet());		
-		for(String key : keys)
-			list.add(key);;
+		TreeSet<String> keys = new TreeSet<String>(SimpleCodeMap.keySet());
+		for (String key : keys)
+			list.add(key);
 		ListArea.layout();
 	}
-	
+
 	Display getDisplay() {
 		return ListArea.getShell().getDisplay();
 	}
@@ -251,15 +253,20 @@ public class CodeGeneratorView implements PidescoView{
 	TreeSet<String> getSimpleCodeTreeSet() {
 		return new TreeSet<String>(SimpleCodeMap.keySet());
 	}
-	
+
+	public ArrayList<SimpleCode> getSimpleCodes() {
+		return new ArrayList<SimpleCode>(SimpleCodeMap.values());
+	}
+
 	void saveSimpleCodesToFile() {
 		IPath location = Platform.getLocation();
 		String pathStr = location.toOSString();
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter(pathStr+"/../pt.iscte.pidesco.codegenerator/Settings/Code.cg", "UTF-8");
-			for(SimpleCode sc : SimpleCodeMap.values()) {
-				writer.print(sc.getCodeName()+"-CGSeparator-"+sc.getOutput());
+			//writer = new PrintWriter(pathStr + "/../pt.iscte.pidesco.codegenerator/Settings/Code.cg", "UTF-8");
+			writer = new PrintWriter("Code.cg", "UTF-8");
+			for (SimpleCode sc : SimpleCodeMap.values()) {
+				writer.print(sc.getCodeName() + "-CGSeparator-" + sc.resultCodeToWrite());
 				writer.print("-CGCodeSeparator-");
 			}
 			writer.close();
@@ -267,40 +274,34 @@ public class CodeGeneratorView implements PidescoView{
 			e.printStackTrace();
 		}
 	}
-	
+
 	void loadSimpleCodesFromFile() {
 		IPath location = Platform.getLocation();
 		String pathStr = location.toOSString();
 		Reader reader;
 		try {
-			reader = new FileReader(pathStr+"/../pt.iscte.pidesco.codegenerator/Settings/Code.cg");
+			//reader = new FileReader(pathStr + "/../pt.iscte.pidesco.codegenerator/Settings/Code.cg");
+			reader = new FileReader("Code.cg");
 			int data = reader.read();
-			String output="";
-		    while(data != -1){
-		        char dataChar = (char) data;
-		        output+=dataChar;
-		        data = reader.read();
-		    }
-		    String[] Codes = output.split("-CGCodeSeparator-");
-		    for(String code : Codes) {
-		    	String[] Code = code.split("-CGSeparator-");
-		    	if(Code.length>1) 
-		    		SimpleCodeMap.put(Code[0], new SimpleCode(Code[0], Code[1]));
-		    }
-		    
+			String output = "";
+			while (data != -1) {
+				char dataChar = (char) data;
+				output += dataChar;
+				data = reader.read();
+			}
+			String[] Codes = output.split("-CGCodeSeparator-");
+			for (String code : Codes) {
+				String[] Code = code.split("-CGSeparator-");
+				if (Code.length > 1)
+					SimpleCodeMap.put(Code[0], new SimpleCode(Code[0], Code[1]));
+			}
+
 			reader.close();
 			refreshList();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	public ArrayList<SimpleCode> getSimpleCodes() {
-		return new ArrayList<SimpleCode>(SimpleCodeMap.values());
-	}
-
-	
 }

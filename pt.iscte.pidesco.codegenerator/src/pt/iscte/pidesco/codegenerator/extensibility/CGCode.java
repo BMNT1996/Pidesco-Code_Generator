@@ -34,7 +34,6 @@ public interface CGCode {
 	
 	/**
 	 * Returns the code that should be write at the cursor
-	 * Should return "" if the execution of the code needs a graphical interface and at the end use javaeditor services to write in the file 
 	 */
 	String resultCodeToWrite();
 	

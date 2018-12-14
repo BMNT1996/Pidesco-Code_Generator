@@ -44,22 +44,19 @@ public class CG_AST_Processing {
 
 	private static class GetClassInformation extends ASTVisitor {
 		private ASTNode rightParent;
-		// visits class/interface declaration
 		@Override
 		public boolean visit(TypeDeclaration node) {
 			classNode=node;
 			return true;
 		}
 
-		// visits attributes
 		@Override
-		public boolean visit(FieldDeclaration node) {
-			// loop for several variables in the same declaration
+		public boolean visit(FieldDeclaration node) {	
 			for(Object o : node.fragments()) {
 				VariableDeclarationFragment var = (VariableDeclarationFragment) o;
 				atributes.add(new CGAttribute(node,var));
 			}
-			return false; // false to avoid child VariableDeclarationFragment to be processed again
+			return false;
 		}
 		
 		@Override
@@ -72,7 +69,6 @@ public class CG_AST_Processing {
 			return true;
 		}
 		
-		// visits variable declarations
 		@Override
 		public boolean visit(VariableDeclarationFragment node) {
 			return true;

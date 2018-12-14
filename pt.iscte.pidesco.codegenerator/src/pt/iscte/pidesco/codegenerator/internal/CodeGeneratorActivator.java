@@ -15,12 +15,12 @@ public class CodeGeneratorActivator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "pt.iscte.pidesco.codegenerator"; //$NON-NLS-1$
 
 	public static BundleContext context;
-	
+
 	private ServiceRegistration<CodeGeneratorServices> service;
-	
+
 	// The shared instance
 	private static CodeGeneratorActivator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -29,22 +29,26 @@ public class CodeGeneratorActivator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.
+	 * BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		CodeGeneratorActivator.context=context;
+		CodeGeneratorActivator.context = context;
 		service = context.registerService(CodeGeneratorServices.class, new CodeGeneratorServicesImpl(), null);
 	}
-	
+
 	public static BundleContext getContext() {
 		return context;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
