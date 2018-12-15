@@ -299,9 +299,7 @@ public class CodeGeneratorView implements PidescoView {
 			reader.close();
 			refreshList();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

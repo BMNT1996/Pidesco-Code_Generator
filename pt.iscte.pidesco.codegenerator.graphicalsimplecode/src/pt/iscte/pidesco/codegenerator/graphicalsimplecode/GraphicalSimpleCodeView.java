@@ -158,9 +158,9 @@ public class GraphicalSimpleCodeView implements CGCode {
 				}
 			}
 		});
-
 		shell.setSize(width, height);
 		shell.setLocation(screenSize.width / 2 - shell.getSize().x / 2, screenSize.height / 2 - shell.getSize().y / 2);
+		shell.layout();
 		shell.open();
 
 		while (!shell.isDisposed()) {
