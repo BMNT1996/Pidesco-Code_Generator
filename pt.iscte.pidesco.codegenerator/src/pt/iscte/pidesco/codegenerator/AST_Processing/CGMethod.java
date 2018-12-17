@@ -19,9 +19,8 @@ public class CGMethod {
 		return methodDeclaration.getName().toString();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public String getMethodReturnType() {
-		return methodDeclaration.getReturnType().toString();
+		return methodDeclaration.getReturnType2().toString();
 	}
 	
 	public boolean isStatic() {

@@ -13,7 +13,7 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IPath;
+//import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -259,8 +259,8 @@ public class CodeGeneratorView implements PidescoView {
 	}
 
 	void saveSimpleCodesToFile() {
-		IPath location = Platform.getLocation();
-		String pathStr = location.toOSString();
+		//IPath location = Platform.getLocation();
+		//String pathStr = location.toOSString();
 		PrintWriter writer;
 		try {
 			//writer = new PrintWriter(pathStr + "/../pt.iscte.pidesco.codegenerator/Settings/Code.cg", "UTF-8");
@@ -276,8 +276,8 @@ public class CodeGeneratorView implements PidescoView {
 	}
 
 	void loadSimpleCodesFromFile() {
-		IPath location = Platform.getLocation();
-		String pathStr = location.toOSString();
+		//sIPath location = Platform.getLocation();
+		//String pathStr = location.toOSString();
 		Reader reader;
 		try {
 			//reader = new FileReader(pathStr + "/../pt.iscte.pidesco.codegenerator/Settings/Code.cg");
